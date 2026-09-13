@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,14 +9,14 @@ import { FakeHttpService } from '../../data-access/fake-http.service';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
 import { CardComponent } from '../../ui/card/card.component';
-
 @Component({
   selector: 'app-teacher-card',
   template: `
-    <app-card
-      [list]="teachers()"
-      [type]="cardType"
-      customClass="bg-light-red"></app-card>
+    <app-card [list]="teachers()" [type]="cardType" customClass="bg-light-red">
+      <ng-container card-image>
+        <img ngSrc="assets/img/teacher.png" width="200" height="200" alt="" />
+      </ng-container>
+    </app-card>
   `,
   styles: [
     `
@@ -25,7 +26,7 @@ import { CardComponent } from '../../ui/card/card.component';
     `,
   ],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [CardComponent],
+  imports: [CardComponent, NgOptimizedImage],
 })
 export class TeacherCardComponent implements OnInit {
   private http = inject(FakeHttpService);

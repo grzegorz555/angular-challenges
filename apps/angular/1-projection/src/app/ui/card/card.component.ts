@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,13 +16,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
     <div
       class="flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4"
       [class]="customClass()">
-      @if (type() === CardType.TEACHER) {
-        <img ngSrc="assets/img/teacher.png" width="200" height="200" alt="" />
-      }
-      @if (type() === CardType.STUDENT) {
-        <img ngSrc="assets/img/student.webp" width="200" height="200" alt="" />
-      }
-
+      <ng-content select="[card-image]"></ng-content>
       <section>
         @for (item of list(); track item) {
           <app-list-item
@@ -41,7 +34,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ListItemComponent, NgOptimizedImage],
+  imports: [ListItemComponent],
 })
 export class CardComponent {
   private teacherStore = inject(TeacherStore);
@@ -50,8 +43,6 @@ export class CardComponent {
   readonly list = input<any[] | null>(null);
   readonly type = input.required<CardType>();
   readonly customClass = input('');
-
-  CardType = CardType;
 
   addNewItem() {
     const type = this.type();
