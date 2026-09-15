@@ -8,7 +8,11 @@ export class CityStore {
   public cities = signal<City[]>([]);
 
   addAll(cities: City[]) {
-    this.cities.set(cities);
+    const existingIds = new Set(this.cities().map((c) => c.id));
+    this.cities.set([
+      ...this.cities(),
+      ...cities.filter((c) => !existingIds.has(c.id)),
+    ]);
   }
 
   addOne(city: City) {

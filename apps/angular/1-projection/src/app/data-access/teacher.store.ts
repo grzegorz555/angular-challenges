@@ -8,7 +8,11 @@ export class TeacherStore {
   public teachers = signal<Teacher[]>([]);
 
   addAll(teachers: Teacher[]) {
-    this.teachers.set(teachers);
+    const existingIds = new Set(this.teachers().map((t) => t.id));
+    this.teachers.set([
+      ...this.teachers(),
+      ...teachers.filter((t) => !existingIds.has(t.id)),
+    ]);
   }
 
   addOne(teacher: Teacher) {

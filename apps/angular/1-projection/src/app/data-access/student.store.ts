@@ -8,7 +8,11 @@ export class StudentStore {
   public students = signal<Student[]>([]);
 
   addAll(students: Student[]) {
-    this.students.set(students);
+    const existingIds = new Set(this.students().map((s) => s.id));
+    this.students.set([
+      ...this.students(),
+      ...students.filter((s) => !existingIds.has(s.id)),
+    ]);
   }
 
   addOne(student: Student) {
