@@ -1,11 +1,12 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  contentChild,
   input,
   output,
 } from '@angular/core';
-import { CardType } from '../../model/card.model';
-import { ListItemComponent } from '../list-item/list-item.component';
+import { CardItemDirective } from '../../directive/card-item.directive';
 
 @Component({
   selector: 'app-card',
@@ -16,10 +17,9 @@ import { ListItemComponent } from '../list-item/list-item.component';
       <ng-content select="[card-image]"></ng-content>
       <section>
         @for (item of list(); track item) {
-          <app-list-item
-            [name]="item.firstName"
-            [id]="item.id"
-            (delete)="delete.emit($event)"></app-list-item>
+          <ng-container
+            [ngTemplateOutlet]="itemTemplate().templateRef"
+            [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
         }
       </section>
 
@@ -31,12 +31,11 @@ import { ListItemComponent } from '../list-item/list-item.component';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ListItemComponent],
+  imports: [CommonModule],
 })
 export class CardComponent {
   readonly list = input<any[] | null>(null);
-  readonly type = input.required<CardType>();
   readonly customClass = input('');
+  readonly itemTemplate = contentChild.required(CardItemDirective);
   add = output<void>();
-  delete = output<number>();
 }

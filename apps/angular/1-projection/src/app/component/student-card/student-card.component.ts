@@ -10,18 +10,23 @@ import {
   randStudent,
 } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
-import { CardType } from '../../model/card.model';
+import { CardItemDirective } from '../../directive/card-item.directive';
 import { CardComponent } from '../../ui/card/card.component';
+import { ListItemComponent } from '../../ui/list-item/list-item.component';
 
 @Component({
   selector: 'app-student-card',
   template: `
     <app-card
       [list]="students()"
-      [type]="cardType"
       (add)="addStudent()"
-      (delete)="deleteStudent($event)"
       customClass="bg-light-green">
+      <ng-template appCardItem let-item>
+        <app-list-item
+          [id]="item.id"
+          [name]="item.firstName"
+          (delete)="deleteStudent($event)" />
+      </ng-template>
       <ng-container card-image>
         <img ngSrc="assets/img/student.webp" width="200" height="200" alt="" />
       </ng-container>
@@ -34,7 +39,12 @@ import { CardComponent } from '../../ui/card/card.component';
       }
     `,
   ],
-  imports: [CardComponent, NgOptimizedImage],
+  imports: [
+    CardComponent,
+    ListItemComponent,
+    CardItemDirective,
+    NgOptimizedImage,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StudentCardComponent implements OnInit {
@@ -42,7 +52,6 @@ export class StudentCardComponent implements OnInit {
   private store = inject(StudentStore);
 
   students = this.store.students;
-  cardType = CardType.STUDENT;
 
   ngOnInit(): void {
     this.http.fetchStudents$.subscribe((s) => this.store.addAll(s));
