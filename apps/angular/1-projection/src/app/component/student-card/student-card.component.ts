@@ -5,7 +5,10 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { FakeHttpService } from '../../data-access/fake-http.service';
+import {
+  FakeHttpService,
+  randStudent,
+} from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { CardType } from '../../model/card.model';
 import { CardComponent } from '../../ui/card/card.component';
@@ -16,6 +19,7 @@ import { CardComponent } from '../../ui/card/card.component';
     <app-card
       [list]="students()"
       [type]="cardType"
+      (add)="addStudent()"
       customClass="bg-light-green">
       <ng-container card-image>
         <img ngSrc="assets/img/student.webp" width="200" height="200" alt="" />
@@ -41,5 +45,9 @@ export class StudentCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.fetchStudents$.subscribe((s) => this.store.addAll(s));
+  }
+
+  addStudent(): void {
+    this.store.addOne(randStudent());
   }
 }

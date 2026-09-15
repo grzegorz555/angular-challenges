@@ -5,14 +5,21 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { FakeHttpService } from '../../data-access/fake-http.service';
+import {
+  FakeHttpService,
+  randTeacher,
+} from '../../data-access/fake-http.service';
 import { TeacherStore } from '../../data-access/teacher.store';
 import { CardType } from '../../model/card.model';
 import { CardComponent } from '../../ui/card/card.component';
 @Component({
   selector: 'app-teacher-card',
   template: `
-    <app-card [list]="teachers()" [type]="cardType" customClass="bg-light-red">
+    <app-card
+      [list]="teachers()"
+      [type]="cardType"
+      (add)="addTeacher()"
+      customClass="bg-light-red">
       <ng-container card-image>
         <img ngSrc="assets/img/teacher.png" width="200" height="200" alt="" />
       </ng-container>
@@ -37,5 +44,9 @@ export class TeacherCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.fetchTeachers$.subscribe((t) => this.store.addAll(t));
+  }
+
+  addTeacher(): void {
+    this.store.addOne(randTeacher());
   }
 }
