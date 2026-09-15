@@ -2,9 +2,10 @@ import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
-  OnInit,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CityStore } from '../../data-access/city.store';
 import {
   FakeHttpService,
@@ -40,14 +41,20 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CityCardComponent implements OnInit {
+export class CityCardComponent {
   private http = inject(FakeHttpService);
   private store = inject(CityStore);
 
+  private fetchedCities = toSignal(this.http.fetchCities$);
   cities = this.store.cities;
 
-  ngOnInit(): void {
-    this.http.fetchCities$.subscribe((s) => this.store.addAll(s));
+  constructor() {
+    effect(() => {
+      const cities = this.fetchedCities();
+      if (cities) {
+        this.store.addAll(cities);
+      }
+    });
   }
 
   addCity(): void {

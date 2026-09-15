@@ -2,9 +2,10 @@ import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
-  OnInit,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FakeHttpService,
   randTeacher,
@@ -39,14 +40,20 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     NgOptimizedImage,
   ],
 })
-export class TeacherCardComponent implements OnInit {
+export class TeacherCardComponent {
   private http = inject(FakeHttpService);
   private store = inject(TeacherStore);
 
+  private fetchedTeachers = toSignal(this.http.fetchTeachers$);
   teachers = this.store.teachers;
 
-  ngOnInit(): void {
-    this.http.fetchTeachers$.subscribe((t) => this.store.addAll(t));
+  constructor() {
+    effect(() => {
+      const teachers = this.fetchedTeachers();
+      if (teachers) {
+        this.store.addAll(teachers);
+      }
+    });
   }
 
   addTeacher(): void {
