@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, untracked } from '@angular/core';
 import { City } from '../model/city.model';
 
 @Injectable({
@@ -8,9 +8,9 @@ export class CityStore {
   public cities = signal<City[]>([]);
 
   addAll(cities: City[]) {
-    const existingIds = new Set(this.cities().map((c) => c.id));
+    const existingIds = new Set(untracked(this.cities).map((c) => c.id));
     this.cities.set([
-      ...this.cities(),
+      ...untracked(this.cities),
       ...cities.filter((c) => !existingIds.has(c.id)),
     ]);
   }
