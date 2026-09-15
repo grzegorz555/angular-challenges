@@ -19,7 +19,7 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
     <app-card
       [list]="teachers()"
       (add)="addTeacher()"
-      customClass="bg-light-red">
+      [style.--bg]="'rgba(250, 0, 0, 0.1)'">
       <ng-template appCardItem let-item>
         <app-list-item
           [id]="item.id"
@@ -31,13 +31,6 @@ import { ListItemComponent } from '../../ui/list-item/list-item.component';
       </ng-container>
     </app-card>
   `,
-  styles: [
-    `
-      ::ng-deep .bg-light-red {
-        background-color: rgba(250, 0, 0, 0.1);
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CardComponent,

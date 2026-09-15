@@ -12,8 +12,7 @@ import { CardItemDirective } from '../../directive/card-item.directive';
   selector: 'app-card',
   template: `
     <div
-      class="flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4"
-      [class]="customClass()">
+      class="card-container flex w-fit flex-col gap-3 rounded-md border-2 border-black p-4">
       <ng-content select="[card-image]"></ng-content>
       <section>
         @for (item of list(); track item) {
@@ -30,12 +29,18 @@ import { CardItemDirective } from '../../directive/card-item.directive';
       </button>
     </div>
   `,
+  styles: [
+    `
+      .card-container {
+        background: var(--bg, gray);
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule],
 })
 export class CardComponent {
   readonly list = input<any[] | null>(null);
-  readonly customClass = input('');
   readonly itemTemplate = contentChild.required(CardItemDirective);
   add = output<void>();
 }
