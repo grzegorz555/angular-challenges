@@ -19,7 +19,7 @@ import { ListItemComponent } from '../list-item/list-item.component';
           <app-list-item
             [name]="item.firstName"
             [id]="item.id"
-            [type]="type()"></app-list-item>
+            (delete)="delete.emit($event)"></app-list-item>
         }
       </section>
 
@@ -38,4 +38,5 @@ export class CardComponent {
   readonly type = input.required<CardType>();
   readonly customClass = input('');
   add = output<void>();
+  delete = output<number>();
 }

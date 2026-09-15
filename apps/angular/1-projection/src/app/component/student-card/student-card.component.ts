@@ -20,6 +20,7 @@ import { CardComponent } from '../../ui/card/card.component';
       [list]="students()"
       [type]="cardType"
       (add)="addStudent()"
+      (delete)="deleteStudent($event)"
       customClass="bg-light-green">
       <ng-container card-image>
         <img ngSrc="assets/img/student.webp" width="200" height="200" alt="" />
@@ -49,5 +50,9 @@ export class StudentCardComponent implements OnInit {
 
   addStudent(): void {
     this.store.addOne(randStudent());
+  }
+
+  deleteStudent(id: number): void {
+    this.store.deleteOne(id);
   }
 }
